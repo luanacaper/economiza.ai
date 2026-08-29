@@ -181,6 +181,22 @@ src="https://www.facebook.com/tr?id=1044927234792800&ev=PageView&noscript=1"/></
     updateClock();
     setInterval(updateClock, 1000);
 
+    // Busca o link de convite do grupo ATIVO em tempo real — quando o robô
+    // rotaciona de grupo (perto de 950 membros), esse arquivo é atualizado
+    // no repositório e a LP passa a apontar pro grupo novo sem precisar
+    // redeployar o HTML inteiro. Se a busca falhar (offline, arquivo ainda
+    // não existe), mantém o link fixo que já está no HTML.
+    fetch('./active-invite.json', { cache: 'no-store' })
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(data){
+        if (data && data.inviteUrl) {
+          document.querySelectorAll('.js-cta-lead').forEach(function(link){
+            link.setAttribute('href', data.inviteUrl);
+          });
+        }
+      })
+      .catch(function(){ /* mantém o link fixo do HTML, sem quebrar nada */ });
+
     // Garante que o evento Lead do Pixel realmente saiu antes de navegar pro
     // WhatsApp — clicar num <a> com onclick+href dispara os dois quase juntos,
     // e o navegador pode cortar o pixel no meio se navegar rápido demais
