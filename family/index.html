@@ -27,6 +27,9 @@ src="https://www.facebook.com/tr?id=3636565639834873&ev=PageView&noscript=1"/></
   .sans { font-family:-apple-system,'Segoe UI',Roboto,sans-serif; }
   .wrap { max-width:1080px; margin:0 auto; padding:0 22px; }
 
+  .iab-banner { background:#FFF4E5; color:#7A4A00; font-size:13px; line-height:1.5; text-align:center; padding:10px 16px; border-bottom:1px solid #FFDFA6; position:sticky; top:0; z-index:80; }
+  .iab-banner b { font-weight:800; }
+
   .topbar { background:var(--azul-escuro); color:#fff; overflow:hidden; white-space:nowrap; padding:9px 0; position:sticky; top:0; z-index:60; }
   .topbar .track { display:inline-block; animation:marq 16s linear infinite; font-family:-apple-system,sans-serif; font-size:12.5px; font-weight:700; letter-spacing:1.4px; text-transform:uppercase; }
   .topbar .track span { margin:0 26px; } .topbar .dot { color:var(--cta2); }
@@ -197,15 +200,40 @@ src="https://www.facebook.com/tr?id=3636565639834873&ev=PageView&noscript=1"/></
       })
       .catch(function(){ /* mantém o link fixo do HTML, sem quebrar nada */ });
 
+    // Navegador embutido do Facebook/Instagram (quem clica no anúncio cai aqui,
+    // não no navegador de verdade do celular) — detectado pelo user agent.
+    // Nesse navegador embutido a troca pro app do WhatsApp costuma travar,
+    // sobretudo no iPhone. Descoberto em 29-30/08/2026 (2 cliques reais no
+    // pixel, 0 entradas no grupo).
+    var ua = navigator.userAgent || '';
+    var isInAppBrowser = /FBAN|FBAV|FB_IAB|Instagram/i.test(ua);
+    var isAndroid = /Android/i.test(ua);
+
+    if (isInAppBrowser) {
+      var banner = document.createElement('div');
+      banner.className = 'iab-banner sans';
+      banner.innerHTML = '⚠️ Pra abrir o WhatsApp certinho, toque nos <b>⋮</b> (ou no ícone de compartilhar) no topo e escolha <b>"Abrir no navegador"</b> antes de continuar.';
+      document.body.insertBefore(banner, document.body.firstChild);
+    }
+
     // Garante que o evento Lead do Pixel realmente saiu antes de navegar pro
     // WhatsApp — clicar num <a> com onclick+href dispara os dois quase juntos,
     // e o navegador pode cortar o pixel no meio se navegar rápido demais
     // (comum no celular). Aqui a gente intercepta, dispara com callback, e só
     // libera a navegação depois de confirmar (ou de um limite de segurança).
+    //
+    // No Android dentro do navegador embutido, empacota o link como Android
+    // Intent — isso força o sistema a resolver "abrir com WhatsApp" mesmo de
+    // dentro de um WebView restrito (funciona bem no Android; no iOS não tem
+    // equivalente por código, só o aviso acima mesmo resolve).
     document.querySelectorAll('.js-cta-lead').forEach(function(link){
       link.addEventListener('click', function(e){
         e.preventDefault();
         var dest = link.getAttribute('href');
+        if (isInAppBrowser && isAndroid) {
+          var withoutScheme = dest.replace(/^https?:\/\//, '');
+          dest = 'intent://' + withoutScheme + '#Intent;scheme=https;package=com.whatsapp;S.browser_fallback_url=' + encodeURIComponent(dest) + ';end';
+        }
         var went = false;
         function go(){ if (went) return; went = true; window.location.href = dest; }
         if (typeof fbq === 'function') {
