@@ -223,9 +223,17 @@ src="https://www.facebook.com/tr?id=3636565639834873&ev=PageView&noscript=1"/></
     // domínio, e é aí que a troca pro WhatsApp costuma travar. Um <button>
     // que navega via JS (window.location) foge dessa interceptação.
     //
-    // Também garante que o evento Lead do Pixel realmente saiu antes de
-    // navegar — no clique, dispara com callback e só libera a navegação
-    // depois de confirmar (ou de um limite de segurança).
+    // CORRIGIDO em 03/09/2026 — comparando com uma página de outro cliente
+    // (Fast Escova) que faz esse mesmo tipo de clique-pro-WhatsApp sem nunca
+    // ter travado: a versão anterior daqui interceptava o clique, disparava o
+    // pixel e só navegava depois de 300ms de espera. Isso quebra em
+    // navegador embutido (Facebook/Instagram) e no Safari: a permissão pra
+    // abrir um app externo só vale dentro do mesmo gesto SÍNCRONO do toque —
+    // qualquer atraso, mesmo pequeno, faz o navegador não reconhecer mais
+    // como ação direta do usuário e bloquear a abertura. A Fast Escova nunca
+    // teve esse atraso (nem intercepta o clique). O pixel da Meta já usa
+    // "beacon" por baixo dos panos e sobrevive à navegação sozinho — não
+    // precisa esperar ele confirmar antes de navegar.
     //
     // No Android dentro do navegador embutido, empacota o link como Android
     // Intent — isso força o sistema a resolver "abrir com WhatsApp" mesmo de
@@ -239,12 +247,12 @@ src="https://www.facebook.com/tr?id=3636565639834873&ev=PageView&noscript=1"/></
           var withoutScheme = dest.replace(/^https?:\/\//, '');
           dest = 'intent://' + withoutScheme + '#Intent;scheme=https;package=com.whatsapp;S.browser_fallback_url=' + encodeURIComponent(dest) + ';end';
         }
-        var went = false;
-        function go(){ if (went) return; went = true; window.location.href = dest; }
+        // Navega JÁ, no mesmo tick síncrono do clique — igual a Fast Escova.
+        var novaAba = window.open(dest, '_blank');
+        if (!novaAba) window.location.href = dest; // fallback se o popup for bloqueado
         if (typeof fbq === 'function') {
           fbq('track', 'Lead', {}, { eventID: 'lead-' + Date.now() });
         }
-        setTimeout(go, 300); // limite de segurança — não trava o clique se o pixel falhar/bloquear
       });
     });
   </script>
