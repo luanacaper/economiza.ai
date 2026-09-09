@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Economiza.ai Family</title>
+<meta name="robots" content="noindex, nofollow">
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '3636565639834873');
+fbq('track', 'PageView');
+fbq('track', 'Lead', {}, { eventID: 'lead-' + Date.now() });
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=3636565639834873&ev=PageView&noscript=1"/></noscript>
+<style>
+  body { font-family:-apple-system,'Segoe UI',Roboto,sans-serif; background:#fff; color:#0B2E1C;
+    display:flex; align-items:center; justify-content:center; min-height:100vh; margin:0; text-align:center; }
+  a { color:#128C4A; font-weight:700; }
+</style>
+</head>
+<body>
+<p id="fallback" style="display:none">Redirecionando... se nada acontecer, <a id="link" href="#">toque aqui</a>.</p>
+<script>
+  // Igual ao /go/ (mesmo Pixel, mesma lógica), só que com destino FIXO —
+  // não segue o grupo ativo da rotação automática (active-invite.json), é
+  // um link de convite específico passado direto. Criado em 09/09/2026.
+  var dest = 'https://chat.whatsapp.com/JkXzvr1KwzX12Jx8Yb8LZG';
+
+  var ua = navigator.userAgent || '';
+  var isInAppBrowser = /FBAN|FBAV|FB_IAB|Instagram/i.test(ua);
+  var isAndroid = /Android/i.test(ua);
+
+  function buildDest(url) {
+    if (isInAppBrowser && isAndroid) {
+      var withoutScheme = url.replace(/^https?:\/\//, '');
+      return 'intent://' + withoutScheme + '#Intent;scheme=https;package=com.whatsapp;S.browser_fallback_url=' + encodeURIComponent(url) + ';end';
+    }
+    return url;
+  }
+
+  // Sem tela, sem botão — só dispara o Pixel e manda direto pro WhatsApp,
+  // no carregamento da página (mesma ressalva do /go/: sem gesto do usuário,
+  // navegador embutido/Chrome Android recente pode bloquear o automático —
+  // o link de texto abaixo é o plano B visível nesse caso).
+  window.location.href = buildDest(dest);
+
+  document.getElementById('link').href = buildDest(dest);
+  document.getElementById('fallback').style.display = 'block';
+</script>
+</body>
+</html>
