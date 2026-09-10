@@ -62,7 +62,7 @@ src="https://www.facebook.com/tr?id=3636565639834873&ev=PageView&noscript=1"/></
 </div>
 
 <script>
-  var dest = 'https://chat.whatsapp.com/HxzlNHAlZsQBWUh1aQA8Mm';
+  var dest = 'https://chat.whatsapp.com/EdWKIfbdSGu9UutCgMJ9Pt';
   var leadFired = false;
 
   function fireLeadAndGo(target) {
@@ -81,10 +81,6 @@ src="https://www.facebook.com/tr?id=3636565639834873&ev=PageView&noscript=1"/></
     if (!novaAba) window.location.href = finalDest;
   }
 
-  fetch('../family/active-invite.json', { cache: 'no-store' })
-    .then(function(r){ return r.ok ? r.json() : null; })
-    .then(function(data){ if (data && data.inviteUrl) dest = data.inviteUrl; })
-    .catch(function(){});
 
   var ua = navigator.userAgent || '';
   var isInAppBrowser = /FBAN|FBAV|FB_IAB|Instagram/i.test(ua);
