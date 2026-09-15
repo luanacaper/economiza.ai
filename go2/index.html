@@ -52,17 +52,23 @@ src="https://www.facebook.com/tr?id=4507344732870900&ev=PageView&noscript=1"/></
 
   /* Foto + selo do WhatsApp, pra deixar claro ANTES do clique que é grupo do
      WhatsApp (referência: cacadordecupom.com) — 15/09/2026 */
-  .foto-wrap { position:relative; width:100%; border-radius:18px; overflow:hidden;
-    margin-bottom:18px; box-shadow:0 10px 26px rgba(11,46,28,.18); }
-  .foto-wrap img { width:100%; display:block; aspect-ratio:1/1; object-fit:cover; }
-  .selo-whats { position:absolute; bottom:10px; left:10px; display:flex; align-items:center;
+  .foto-wrap { position:relative; width:100%; border-radius:18px; overflow:visible;
+    margin-bottom:26px; box-shadow:0 10px 26px rgba(11,46,28,.18); }
+  /* aspect-ratio bate com a foto original (1086x1448 = 3:4) — sem crop, mostra
+     a foto inteira em vez de cortar cabeça/queixo com object-fit:cover 1:1 */
+  .foto-wrap img { width:100%; display:block; aspect-ratio:3/4; object-fit:cover;
+    border-radius:18px; }
+  /* Selo e badge agora "flutuam" como sticker/notificação por cima da foto,
+     passando um pouco da borda — pedido dela em 15/09/2026 */
+  .selo-whats { position:absolute; bottom:-12px; left:14px; display:flex; align-items:center;
     gap:6px; background:var(--verde); color:#fff; font-weight:800; font-size:12px;
-    padding:7px 12px 7px 8px; border-radius:999px; box-shadow:0 4px 10px rgba(0,0,0,.25); }
+    padding:8px 14px 8px 10px; border-radius:999px; box-shadow:0 6px 14px rgba(0,0,0,.3);
+    border:3px solid #fff; transform:rotate(-3deg); }
   .selo-whats svg { width:18px; height:18px; flex-shrink:0; }
-  .badge-canto { position:absolute; top:10px; right:10px; background:#fff; border-radius:50%;
-    width:38px; height:38px; display:flex; align-items:center; justify-content:center;
-    box-shadow:0 3px 8px rgba(0,0,0,.2); }
-  .badge-canto svg { width:24px; height:24px; }
+  .badge-canto { position:absolute; top:-12px; right:-8px; background:#fff; border-radius:50%;
+    width:44px; height:44px; display:flex; align-items:center; justify-content:center;
+    box-shadow:0 4px 12px rgba(0,0,0,.25); border:3px solid #fff; transform:rotate(8deg); }
+  .badge-canto svg { width:26px; height:26px; }
 
   .headline { font-size:21px; font-weight:800; line-height:1.25; margin-bottom:16px; }
   .headline .azul { color:#1E6FD9; }
